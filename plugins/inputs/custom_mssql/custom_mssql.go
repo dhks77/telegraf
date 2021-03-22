@@ -279,7 +279,7 @@ func (s *SQLServer) Init() error {
 }
 
 func init() {
-	inputs.Add("sqlserver", func() telegraf.Input {
+	inputs.Add("custom_mssql", func() telegraf.Input {
 		return &SQLServer{Servers: []string{defaultServer}}
 	})
 }
