@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
-	"sync"
 	"time"
 
 	_ "github.com/denisenkom/go-mssqldb" // go-mssqldb initialization
@@ -49,19 +48,23 @@ type scanner interface {
 
 // Gather collect data from SQL Server
 func (s *SQLServer) Gather(acc telegraf.Accumulator) error {
-	var wg sync.WaitGroup
-	query := Query{ScriptName: "SQLServerLogBackupSize-CustomMssql", Script: sqlServerLogBackupSize, ResultByRow: false}
-
-	for _, server := range s.Servers {
-		wg.Add(1)
-		go func(serv string, query Query) {
-			defer wg.Done()
-			queryError := s.gatherServer(serv, query, acc)
-			acc.AddError(queryError)
-		}(server, query)
-	}
-
-	wg.Wait()
+	//var wg sync.WaitGroup
+	//query := Query{ScriptName: "SQLServerLogBackupSize-CustomMssql", Script: sqlServerLogBackupSize, ResultByRow: false}
+	//
+	//for _, server := range s.Servers {
+	//	wg.Add(1)
+	//	go func(serv string, query Query) {
+	//		defer wg.Done()
+	//		queryError := s.gatherServer(serv, query, acc)
+	//		acc.AddError(queryError)
+	//	}(server, query)
+	//}
+	//
+	//wg.Wait()
+	var fields = make(map[string]interface{})
+	var tags = make(map[string]string)
+	fields["value"] = 123123
+	acc.AddCounter("1", fields, tags, time.Now())
 
 	return nil
 }
